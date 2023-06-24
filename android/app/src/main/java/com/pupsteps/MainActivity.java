@@ -1,4 +1,4 @@
-package com.pupsteps;
+package com.iamkimwater.pupsteps;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

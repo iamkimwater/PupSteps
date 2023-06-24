@@ -73,9 +73,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.pupsteps"
+    namespace "com.iamkimwater.pupsteps"
     defaultConfig {
-        applicationId "com.pupsteps"
+        applicationId "com.iamkimwater.pupsteps"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
