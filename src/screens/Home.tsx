@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Pressable, Text, View} from 'react-native';
+import {Button, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import userSlice from '../redux/reducers/user';
@@ -17,6 +17,10 @@ function Home(props: HomeProps) {
 
   const GotoFindWalkmateBoard = () => {
     navigation.navigate('FindWalkmateBoard');
+  };
+
+  const GotoPetInfo = () => {
+    navigation.navigate('PetInfo');
   };
 
   const dispatch = useDispatch();
@@ -47,6 +51,7 @@ function Home(props: HomeProps) {
           <Text>Welcome to PupSteps</Text>
           <Button title={'Logout'} onPress={Logout} />
           <Button title={'나랑산책갈래'} onPress={GotoFindWalkmateBoard} />
+          <Button title={'펫정보'} onPress={GotoPetInfo} />
         </View>
       )}
     </View>

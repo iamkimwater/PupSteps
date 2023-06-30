@@ -5,9 +5,9 @@ import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import Config from 'react-native-config';
 import {useDispatch, useSelector} from 'react-redux';
 import userSlice from '../redux/reducers/user';
-import {RootState} from '../types/navigationsTypes';
+import {LoginProps, RootState} from '../types/navigationsTypes';
 
-function Login() {
+function Login(props: LoginProps) {
   const dispatch = useDispatch();
   const {me} = useSelector((state: RootState) => state.user);
 
