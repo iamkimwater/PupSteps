@@ -3,57 +3,46 @@ import {
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 import rootReducer from '../redux/reducers';
-import {UserInfo, PetInfo, WalkInfo, PostInfo} from './infoTypes';
+import {IUserInfo, IPetInfo, IWalkInfo, IPostInfo} from './infoTypes';
 
 export type RootState = ReturnType<typeof rootReducer>;
 
 export type RootStackParamList = {
   Home: undefined;
-  Signup: {userInfo: UserInfo; petInfo: PetInfo; walkInfo: WalkInfo};
+  Signup: undefined;
   Login: undefined;
-  InfoArea: undefined; // 펫 정보, 게시판, 알람이 들어갈 구역
-  PetInfo: undefined;
-  // Alarms: undefined;
-  FindWalkmateBoard: undefined;
-  // AddPosting: {
-  //   userId: number;
-  //   userInfo: UserInfo;
-  //   petInfo: PetInfo;
-  //   walkInfo: WalkInfo;
-  // };
-  AddPosting: undefined;
-  ViewPosting: {postInfo: PostInfo};
-  Settings: {
-    userId: number;
-    userInfo: UserInfo;
-    petInfo: PetInfo;
-    walkInfo: WalkInfo;
-  };
+  InfoAreaComponent: undefined; // 펫 정보, 게시판, 알람이 들어갈 구역
+  PetInfoComponent: {petInfo: IPetInfo};
+  // AlarmsComponent: undefined;
+  FindWalkmateBoardComponent: undefined;
+  AddPostingComponent: undefined;
+  ViewPostingComponent: {postInfo: IPostInfo};
+  Settings: undefined;
 };
 
 export type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
 export type SignupProps = NativeStackScreenProps<RootStackParamList, 'Signup'>;
 export type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
-export type InfoAreaProps = NativeStackScreenProps<
+export type InfoAreaComponentProps = NativeStackScreenProps<
   RootStackParamList,
-  'InfoArea'
+  'InfoAreaComponent'
 >;
-export type PetInfoProps = NativeStackScreenProps<
+export type PetInfoComponentProps = NativeStackScreenProps<
   RootStackParamList,
-  'PetInfo'
+  'PetInfoComponent'
 >;
-// export type AlarmsProps = NativeStackScreenProps<RootStackParamList, 'Alarms'>;
-export type FindWalkmateBoardProps = NativeStackScreenProps<
+// export type AlarmsProps = NativeStackScreenProps<RootStackParamList, 'AlarmsComponent'>;
+export type FindWalkmateBoardComponentProps = NativeStackScreenProps<
   RootStackParamList,
-  'FindWalkmateBoard'
+  'FindWalkmateBoardComponent'
 >;
-export type AddPostingProps = NativeStackScreenProps<
+export type AddPostingComponentProps = NativeStackScreenProps<
   RootStackParamList,
-  'AddPosting'
+  'AddPostingComponent'
 >;
-export type ViewPostingProps = NativeStackScreenProps<
+export type ViewPostingComponentProps = NativeStackScreenProps<
   RootStackParamList,
-  'ViewPosting'
+  'ViewPostingComponent'
 >;
 export type SettingsProps = NativeStackScreenProps<
   RootStackParamList,

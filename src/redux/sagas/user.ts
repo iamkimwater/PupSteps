@@ -3,6 +3,9 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import axios from 'axios';
 import userSlice from '../reducers/user';
 import {gateWayWrapper} from './common';
+import {ZMeInfo} from '../../types/zodinfoTypes';
+import errorSlice from '../reducers/error';
+import {IError} from '../../types/infoTypes';
 
 function* loginByFirebaseWatch() {
   yield takeEvery(
@@ -80,16 +83,46 @@ function* loginByCookie(action: any) {
     },
     data: {
       user: {
-        userId: 1,
+        id: 1,
+        userName: '펫주인',
         email: 'xxx@naver.com',
+        petInfo: {
+          id: 1,
+          petName: '레오',
+          petAge: 2,
+          petGender: 1,
+          petBreed: 1,
+          petImageUrl:
+            'https://unsplash.com/ko/%EC%82%AC%EC%A7%84/52IKFMQGU24?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink',
+        },
+        userType: 0,
+        walkInfo: {
+          id: 1,
+          walkArea: '서울시 강남구',
+          walkTime: '8:00 AM',
+        },
       },
     },
   };
   const {user} = res.data;
-  yield put({
-    type: userSlice.actions.loginByCookieSuccess,
-    payload: {user},
-  });
+  const parsedResult = ZMeInfo.safeParse(user);
+  if (parsedResult.success) {
+    yield put({
+      type: userSlice.actions.loginByCookieSuccess,
+      payload: {user: parsedResult.data},
+    });
+  } else {
+    console.error(parsedResult.error.message);
+    const error: IError = {
+      code: 404,
+      type: 'user-type-error',
+      message: '유저 타입이 잘못되었습니다.',
+    };
+    yield put({
+      type: errorSlice.actions.setError,
+      payload: {error},
+    });
+  }
 }
 
 export default function* userSaga() {

@@ -10,72 +10,91 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import userSlice from '../redux/reducers/user';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import Config from 'react-native-config';
-import InfoArea from '../components/InfoArea';
+import InfoAreaComponent from '../components/InfoAreaComponent';
 import Home from '../screens/Home';
 import Signup from '../screens/Signup';
 import Login from '../screens/Login';
-import PetInfo from '../components/PetInfo';
-import Alarms from '../components/Alarms';
-import FindWalkmateBoard from '../components/FindWalkmateBoard';
-import AddPosting from '../components/AddPosting';
-import ViewPosting from '../components/ViewPosting';
+import PetInfoComponent from '../components/PetInfoComponent';
+import FindWalkmateBoardComponent from '../components/FindWalkmateBoardComponent';
+import AddPostingComponent from '../components/post/AddPostingComponent';
+import ViewPostingComponent from '../components/post/ViewPostingComponent';
 import Setting from '../screens/Setting';
+import SplashScreen from 'react-native-splash-screen';
+import errorSlice from '../redux/reducers/error';
+import {Text} from 'react-native';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-function StackNavigation() {
+const StackNavigation = () => {
+  // 글로벌 데이터
   const {me} = useSelector((state: RootState) => state.user);
+  const {error} = useSelector((state: RootState) => state.error);
+
+  // 함수
   const dispatch = useDispatch();
 
   const authCheck = async () => {
     try {
-      const cookie = await EncryptedStorage.getItem('cookie');
-      if (cookie === null) {
-        const isSignedIn = await GoogleSignin.isSignedIn();
-        if (isSignedIn) {
-          const {idToken} = await GoogleSignin.signInSilently();
-          if (idToken !== null) {
-            const googleCredential =
-              auth.GoogleAuthProvider.credential(idToken);
-            return auth().signInWithCredential(googleCredential);
-          } else {
-            throw new Error('google login failed');
-          }
-        } else {
-          /*아무 것도 안 함*/
-        }
-      } else {
-        dispatch(userSlice.actions.loginByCookie({}));
-      }
+      dispatch(userSlice.actions.loginByCookie({}));
+      // const cookie = await EncryptedStorage.getItem('cookie');
+      // if (cookie) {
+      //   dispatch(userSlice.actions.loginByCookie({}));
+      //   return;
+      // }
+      //
+      // const isSignedIn = await GoogleSignin.isSignedIn();
+      // if (!isSignedIn) {
+      //   SplashScreen.hide();
+      //   return;
+      // }
+      //
+      // const {idToken} = await GoogleSignin.signInSilently();
+      // const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      // return auth().signInWithCredential(googleCredential);
     } catch (e) {
       console.error(e);
     }
   };
 
   const onAuthStateChanged = async (user: FirebaseAuthTypes.User | null) => {
-    if (user) {
-      const idToken = await user.getIdToken();
-      console.log('get idToken success');
-      dispatch(userSlice.actions.loginByFirebase({idToken: idToken}));
+    try {
+      if (user) {
+        const idToken = await user.getIdToken();
+        console.log('get idToken success');
+        dispatch(userSlice.actions.loginByFirebase({idToken}));
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 
+  // 컴포넌트가 렌더링될 때 자동으로 실행될 함수들의 모음
   useEffect(() => {
     auth().onAuthStateChanged(onAuthStateChanged);
     GoogleSignin.configure({
       webClientId: Config.WEB_CLIENT_ID,
     });
-    authCheck().then();
+    authCheck();
   }, []);
-
   useEffect(() => {
     if (me) {
-      // setTimeout(() => {
-      //   SplashScreen.hide();
-      // }, 1000);
+      SplashScreen.hide();
     }
   }, [me]);
+  useEffect(() => {
+    if (error) {
+      if (error.type === 'cookie-expired') {
+        SplashScreen.hide();
+      } else if (error.type === 'firebase-token-error') {
+        SplashScreen.hide();
+      } else if (error.type === 'user-type-error') {
+        SplashScreen.hide();
+      }
+      dispatch(errorSlice.actions.setError({}));
+    }
+  }, [error]);
 
+  // 리턴
   return (
     <NavigationContainer>
       {!me ? (
@@ -87,20 +106,28 @@ function StackNavigation() {
       ) : (
         <Stack.Navigator>
           <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="InfoArea" component={InfoArea} />
-          <Stack.Screen name="PetInfo" component={PetInfo} />
-          {/*<Stack.Screen name="Alarms" component={Alarms} />*/}
           <Stack.Screen
-            name="FindWalkmateBoard"
-            component={FindWalkmateBoard}
+            name="InfoAreaComponent"
+            component={InfoAreaComponent}
           />
-          <Stack.Screen name="AddPosting" component={AddPosting} />
-          <Stack.Screen name="ViewPosting" component={ViewPosting} />
+          {/*<Stack.Screen name="AlarmsComponent" component={AlarmsComponent} />*/}
+          <Stack.Screen
+            name="FindWalkmateBoardComponent"
+            component={FindWalkmateBoardComponent}
+          />
+          <Stack.Screen
+            name="AddPostingComponent"
+            component={AddPostingComponent}
+          />
+          <Stack.Screen
+            name="ViewPostingComponent"
+            component={ViewPostingComponent}
+          />
           <Stack.Screen name="Settings" component={Setting} />
         </Stack.Navigator>
       )}
     </NavigationContainer>
   );
-}
+};
 
 export default StackNavigation;

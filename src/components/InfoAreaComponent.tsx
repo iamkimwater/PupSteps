@@ -1,7 +1,7 @@
 import {Text, View} from 'react-native';
 import {InfoAreaProps} from '../types/navigationsTypes';
 
-function InfoArea(props: InfoAreaProps) {
+function InfoAreaComponent(props: InfoAreaProps) {
   return (
     <View>
       <Text>InfoArea</Text>
@@ -9,4 +9,4 @@ function InfoArea(props: InfoAreaProps) {
   );
 }
 
-export default InfoArea;
+export default InfoAreaComponent;

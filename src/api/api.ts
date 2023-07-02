@@ -1,11 +1,11 @@
 import axios, {AxiosResponse} from 'axios';
-import {UserInfo} from '../types/infoTypes';
+import {IUserInfo} from '../types/infoTypes';
 
 const mockDataPath = './src/mocks/mockData.json';
 
-export async function getMockData(): Promise<UserInfo[]> {
+export async function getMockData(): Promise<IUserInfo[]> {
   try {
-    const response: AxiosResponse<UserInfo[]> = await axios.get(mockDataPath);
+    const response: AxiosResponse<IUserInfo[]> = await axios.get(mockDataPath);
     return response.data;
   } catch (error) {
     console.error('데이터를 불러오는 중에 오류가 발생했습니다:', error);

@@ -1,34 +1,46 @@
-export interface UserInfo {
-  userId: number;
-  loginInfo: LoginInfo;
-  petInfo: PetInfo;
-  walkInfo: WalkInfo;
-  postInfo: PostInfo;
+import {BREED, GENDER, USER_TYPE} from './enums';
+
+export interface IPetInfo {
+  id: number;
+  petName: string;
+  petAge: number;
+  petGender: GENDER;
+  petBreed: BREED;
+  petImageUrl: string;
 }
 
-export interface LoginInfo {
+export interface IWalkInfo {
+  id: number;
+  walkArea: string;
+  walkTime: string;
+}
+
+export interface IUserInfo {
+  id: number;
+  userName: string;
   email: string;
-  password: string;
+  petInfo: IPetInfo;
 }
 
-export interface PetInfo {
-  petId: number;
-  name: string;
-  age: number;
-  gender: string;
-  breed: string;
+export interface IMeInfo extends IUserInfo {
+  userType: USER_TYPE.ME;
+  walkInfo: IWalkInfo;
 }
 
-export interface WalkInfo {
-  walkId: number;
-  area: string;
-  time: string;
+export interface IOtherInfo extends IUserInfo {
+  userType: USER_TYPE.OTHER;
 }
 
-export interface PostInfo {
+export interface IPostInfo {
   postId: number;
   title: string;
   content: string;
-  // petInfo: PetInfo;
-  // walkInfo: WalkInfo;
+  createdAt: string;
+  postWriter: IOtherInfo;
+}
+
+export interface IError {
+  type: string;
+  code: number;
+  message: string;
 }

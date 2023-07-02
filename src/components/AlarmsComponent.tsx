@@ -1,6 +1,6 @@
 import {Text, View} from 'react-native';
 
-function Alarms() {
+function AlarmsComponent() {
   return (
     <View>
       <Text>Alarms</Text>
@@ -8,4 +8,4 @@ function Alarms() {
   );
 }
 
-export default Alarms;
+export default AlarmsComponent;

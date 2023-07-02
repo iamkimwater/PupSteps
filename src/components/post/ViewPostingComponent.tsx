@@ -1,13 +1,13 @@
 import React from 'react';
 import {Button, Text, View} from 'react-native';
-import {NavigationProps, ViewPostingProps} from '../types/navigationsTypes';
+import {NavigationProps, ViewPostingProps} from '../../types/navigationsTypes';
 import {useNavigation} from '@react-navigation/native';
 
-function ViewPosting(props: ViewPostingProps) {
+function ViewPostingComponent(props: ViewPostingProps) {
   const navigation = useNavigation<NavigationProps>();
   const {postInfo} = props.route.params;
 
-  const GotoFindWalkmateBoard = () => {
+  const gotoFindWalkmateBoard = () => {
     navigation.navigate('FindWalkmateBoard');
   };
 
@@ -17,9 +17,9 @@ function ViewPosting(props: ViewPostingProps) {
       <Text style={{fontSize: 20}}>{postInfo.content}</Text>
       <Text>펫 정보: ooo{/* 펫 정보띄워주기 */}</Text>
       <Text>산책 정보: ooo{/* 산책 정보 띄워주기 */}</Text>
-      <Button title={'게시판으로 돌아가기'} onPress={GotoFindWalkmateBoard} />
+      <Button title={'게시판으로 돌아가기'} onPress={gotoFindWalkmateBoard} />
     </View>
   );
 }
 
-export default ViewPosting;
+export default ViewPostingComponent;

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Button, TextInput, View} from 'react-native';
 
-function AddPosting() {
+function AddPostingComponent() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
@@ -14,4 +14,4 @@ function AddPosting() {
   );
 }
 
-export default AddPosting;
+export default AddPostingComponent;

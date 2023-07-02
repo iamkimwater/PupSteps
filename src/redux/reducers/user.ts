@@ -1,12 +1,14 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {IMe, meSchema} from '../../types/commonTypes';
+import {IMeInfo, IOtherInfo} from '../../types/infoTypes';
 
 export interface IUserState {
-  me: IMe | null;
+  me: IMeInfo | null;
+  other: IOtherInfo | null;
 }
 
 const userState: IUserState = {
   me: null,
+  other: null,
 };
 
 const userSlice = createSlice({
@@ -15,13 +17,11 @@ const userSlice = createSlice({
   reducers: {
     loginByCookie(state, action) {},
     loginByCookieSuccess(state, action) {
-      const {user} = action.payload;
-      state.me = meSchema.parse(user);
+      state.me = action.payload.user;
     },
     loginByFirebase(state, action) {},
     loginByFirebaseSuccess(state, action) {
-      const {user} = action.payload;
-      state.me = meSchema.parse(user);
+      state.me = action.payload.user;
     },
     logout(state, action) {},
     logoutSuccess(state, action) {

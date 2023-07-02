@@ -5,12 +5,12 @@ import {
   NavigationProps,
 } from '../types/navigationsTypes';
 import {useNavigation} from '@react-navigation/native';
-import {PostInfo} from '../types/infoTypes';
+import {IPostInfo} from '../types/infoTypes';
 import mockData from '../mocks/mockData.json';
 
-function FindWalkmateBoard(props: FindWalkmateBoardProps) {
+function FindWalkmateBoardComponent(props: FindWalkmateBoardProps) {
   const navigation = useNavigation<NavigationProps>();
-  const [posts, setPosts] = useState<PostInfo[]>([]);
+  const [posts, setPosts] = useState<IPostInfo[]>([]);
 
   useEffect(() => {
     fetchPosts();
@@ -28,7 +28,7 @@ function FindWalkmateBoard(props: FindWalkmateBoardProps) {
     navigation.navigate('AddPosting');
   };
 
-  const GotoViewPosting = (postInfo: PostInfo) => {
+  const GotoViewPosting = (postInfo: IPostInfo) => {
     navigation.navigate('ViewPosting', {postInfo});
   };
 
@@ -57,4 +57,4 @@ function FindWalkmateBoard(props: FindWalkmateBoardProps) {
   );
 }
 
-export default FindWalkmateBoard;
+export default FindWalkmateBoardComponent;
