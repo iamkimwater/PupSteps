@@ -10,4 +10,6 @@ export enum GENDER {
 
 export enum BREED {
   JINDO,
+  BULDOG,
+  SHEPHERD,
 }

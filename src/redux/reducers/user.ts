@@ -27,6 +27,13 @@ const userSlice = createSlice({
     logoutSuccess(state, action) {
       state.me = null;
     },
+    addPetInfo(state, action) {},
+    addPetInfoSuccess(state, action) {
+      const {petInfo} = action.payload;
+      if (state.me) {
+        state.me.petInfo = petInfo;
+      }
+    },
   },
 });
 

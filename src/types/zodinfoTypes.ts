@@ -24,12 +24,23 @@ export const ZOtherInfo = z.object({
 });
 
 export const ZPostInfo = z.object({
-  postId: z.number(),
+  id: z.number(),
   title: z.string(),
   content: z.string(),
   createdAt: z.string(),
   postWriter: ZOtherInfo,
 });
+
+export const ZPostsInfo = z.array(ZPostInfo);
+
+export const ZCommentInfo = z.object({
+  id: z.number(),
+  commentContent: z.string(),
+  createdAt: z.string(),
+  commentWriter: ZOtherInfo,
+});
+
+export const ZCommentsInfo = z.array(ZCommentInfo);
 
 export const ZMeInfo = z.object({
   id: z.number(),
@@ -48,4 +59,9 @@ export const ZError = z.object({
       message: z.string(),
     }),
   }),
+});
+
+export const ZFeedback = z.object({
+  result: z.boolean(),
+  message: z.string(),
 });

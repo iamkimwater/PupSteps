@@ -5,7 +5,6 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {RootStackParamList, RootState} from '../types/navigationsTypes';
 import {useEffect} from 'react';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import userSlice from '../redux/reducers/user';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
@@ -14,14 +13,15 @@ import InfoAreaComponent from '../components/InfoAreaComponent';
 import Home from '../screens/Home';
 import Signup from '../screens/Signup';
 import Login from '../screens/Login';
-import PetInfoComponent from '../components/PetInfoComponent';
-import FindWalkmateBoardComponent from '../components/FindWalkmateBoardComponent';
-import AddPostingComponent from '../components/post/AddPostingComponent';
-import ViewPostingComponent from '../components/post/ViewPostingComponent';
+import AddPost from '../screens/AddPost';
 import Setting from '../screens/Setting';
 import SplashScreen from 'react-native-splash-screen';
 import errorSlice from '../redux/reducers/error';
-import {Text} from 'react-native';
+import Board from '../screens/Board';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import Post from '../screens/Post';
+import AddPet1 from '../screens/AddPet1';
+import AddPet2 from '../screens/AddPet2';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -35,7 +35,8 @@ const StackNavigation = () => {
 
   const authCheck = async () => {
     try {
-      dispatch(userSlice.actions.loginByCookie({}));
+      const cookie = await EncryptedStorage.getItem('cookie');
+      dispatch(userSlice.actions.loginByCookie({cookie}));
       // const cookie = await EncryptedStorage.getItem('cookie');
       // if (cookie) {
       //   dispatch(userSlice.actions.loginByCookie({}));
@@ -92,7 +93,7 @@ const StackNavigation = () => {
       }
       dispatch(errorSlice.actions.setError({}));
     }
-  }, [error]);
+  }, [dispatch, error]);
 
   // 리턴
   return (
@@ -110,19 +111,11 @@ const StackNavigation = () => {
             name="InfoAreaComponent"
             component={InfoAreaComponent}
           />
-          {/*<Stack.Screen name="AlarmsComponent" component={AlarmsComponent} />*/}
-          <Stack.Screen
-            name="FindWalkmateBoardComponent"
-            component={FindWalkmateBoardComponent}
-          />
-          <Stack.Screen
-            name="AddPostingComponent"
-            component={AddPostingComponent}
-          />
-          <Stack.Screen
-            name="ViewPostingComponent"
-            component={ViewPostingComponent}
-          />
+          <Stack.Screen name="AddPet1" component={AddPet1} />
+          <Stack.Screen name="AddPet2" component={AddPet2} />
+          <Stack.Screen name="Board" component={Board} />
+          <Stack.Screen name="AddPost" component={AddPost} />
+          <Stack.Screen name="Post" component={Post} />
           <Stack.Screen name="Settings" component={Setting} />
         </Stack.Navigator>
       )}

@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import userSlice from '../redux/reducers/user';
 import {LoginProps, RootState} from '../types/navigationsTypes';
 
-function Login(props: LoginProps) {
+function Login() {
   const dispatch = useDispatch();
   const {me} = useSelector((state: RootState) => state.user);
 
@@ -28,7 +28,7 @@ function Login(props: LoginProps) {
 
   return me ? (
     <Text>
-      로그인 성공 {me.email}, {me.userId}
+      로그인 성공 {me.email}, {me.id}
     </Text>
   ) : (
     <Button title="Google Sign-In" onPress={() => onGoogleButtonPress()} />

@@ -1,7 +1,6 @@
 import {Text, View} from 'react-native';
-import {InfoAreaProps} from '../types/navigationsTypes';
 
-function InfoAreaComponent(props: InfoAreaProps) {
+function InfoAreaComponent() {
   return (
     <View>
       <Text>InfoArea</Text>

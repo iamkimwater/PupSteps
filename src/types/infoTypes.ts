@@ -32,15 +32,26 @@ export interface IOtherInfo extends IUserInfo {
 }
 
 export interface IPostInfo {
-  postId: number;
+  id: number;
   title: string;
   content: string;
   createdAt: string;
   postWriter: IOtherInfo;
 }
 
+export interface ICommentInfo {
+  id: number;
+  commentContent: string;
+  createdAt: string;
+  commentWriter: IOtherInfo;
+}
 export interface IError {
   type: string;
   code: number;
+  message: string;
+}
+
+export interface IFeedback {
+  result: boolean;
   message: string;
 }
