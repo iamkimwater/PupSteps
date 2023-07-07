@@ -100,21 +100,3 @@ ios 프로젝트가 없는 상태이므로 파일 직접 생성
 npm install appcenter appcenter-analytics appcenter-crashes --save-exact
 ```
 2) Integrate the SDK
-
-
----
-구글로그인 구현하고 목데이터 만들어서 axios 설치함
-```
-npm i axios
-```
-목데이터에서 데이터 받아올 때
-```typescript
-import axios from 'axios';
-
-useEffect(() => {
-    axios.get('목데이터 파일경로')
-        .then(response => setUsers(response.data))
-        .catch(error => console.error(error));
-}
-
-```
