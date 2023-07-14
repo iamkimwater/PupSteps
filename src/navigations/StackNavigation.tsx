@@ -9,7 +9,6 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import userSlice from '../redux/reducers/user';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import Config from 'react-native-config';
-import InfoAreaComponent from '../components/InfoAreaComponent';
 import Home from '../screens/Home';
 import Signup from '../screens/Signup';
 import Login from '../screens/Login';
@@ -107,15 +106,11 @@ const StackNavigation = () => {
       ) : (
         <Stack.Navigator>
           <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen
-            name="InfoAreaComponent"
-            component={InfoAreaComponent}
-          />
           <Stack.Screen name="AddPet1" component={AddPet1} />
           <Stack.Screen name="AddPet2" component={AddPet2} />
-          <Stack.Screen name="Board" component={Board} />
+          <Stack.Screen name="Board" component={Board} options={{title: ''}} />
           <Stack.Screen name="AddPost" component={AddPost} />
-          <Stack.Screen name="Post" component={Post} />
+          <Stack.Screen name="Post" component={Post} options={{title: ''}} />
           <Stack.Screen name="Settings" component={Setting} />
         </Stack.Navigator>
       )}

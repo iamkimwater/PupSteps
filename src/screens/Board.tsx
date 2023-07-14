@@ -46,7 +46,7 @@ const Board = () => {
 
   return (
     <FlatList
-      style={{padding: 20}}
+      style={{padding: 20, backgroundColor: '#ffffff'}}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }

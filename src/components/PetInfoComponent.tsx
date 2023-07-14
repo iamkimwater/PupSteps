@@ -1,70 +1,109 @@
+import React, {useRef, useState} from 'react';
 import {Dimensions, Image, Text, View} from 'react-native';
-import React, {useCallback, useMemo} from 'react';
 import {useSelector} from 'react-redux';
+import FlipCard from 'react-native-flip-card';
+import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler';
+import {GENDER} from '../types/enums';
 import {RootState} from '../types/navigationsTypes';
+import {IPetInfo} from '../types/infoTypes';
 import LoadingComponent from './common/LoadingComponent';
-import {BREED, GENDER} from '../types/enums';
+
+const windowWidth = Dimensions.get('window').width;
+const flipCardWidth = windowWidth - 100;
+const flipCardHeight = flipCardWidth;
+const gap = 30;
+const offset = 30;
 
 const PetInfoComponent = () => {
-  // 글로벌 데이터
   const {me} = useSelector((state: RootState) => state.user);
-  const windowWidth = Dimensions.get('window').width;
 
-  // 계산된 데이터
-  const calculatedBreed = useMemo(() => {
-    if (!me) {
-      return null;
-    }
+  const [flipped, setFlipped] = useState(false);
 
-    return me.petInfo.petBreed === BREED.JINDO
-      ? '진돗개'
-      : me.petInfo.petBreed === BREED.BULDOG
-      ? '불독'
-      : me.petInfo.petBreed === BREED.SHEPHERD
-      ? '셰퍼드'
-      : '알 수 없음';
-  }, [me]);
+  const flipRefs = useRef([]);
 
-  // 값을 계산해서 리턴 해주는 함수
-  const getBreed = useCallback(() => {
-    if (!me) {
-      return null;
-    }
+  const onScroll = e => {
+    flipRefs.current.forEach(ref => ref.flip(false));
+  };
 
-    return me.petInfo.petBreed === BREED.JINDO
-      ? '진돗개'
-      : me.petInfo.petBreed === BREED.BULDOG
-      ? '불독'
-      : me.petInfo.petBreed === BREED.SHEPHERD
-      ? '셰퍼드'
-      : '알 수 없음';
-  }, [me]);
-
-  // 리턴
   return me ? (
-    <View>
-      <Image
-        source={{uri: me.petInfo.petImageUrl}}
-        style={{
-          width: windowWidth - 50,
-          height: windowWidth - 50,
-          borderRadius: 10,
+    <GestureHandlerRootView style={{flex: 1, backgroundColor: '#ffffff'}}>
+      <ScrollView
+        automaticallyAdjustContentInsets={false}
+        contentContainerStyle={{
+          paddingHorizontal: offset + gap / 2,
         }}
-      />
-      <Text style={{fontSize: 16, color: '#5e5d5d'}}>
-        이름: {me.petInfo.petName}
-      </Text>
-      <Text style={{fontSize: 16, color: '#5e5d5d'}}>
-        나이: {me.petInfo.petAge}살
-      </Text>
-      <Text style={{fontSize: 16, color: '#5e5d5d'}}>
-        성별: {me.petInfo.petGender === GENDER.boy ? '수컷' : '암컷'}
-      </Text>
-      <Text style={{fontSize: 16, color: '#5e5d5d'}}>견종:{getBreed()}</Text>
-      <Text style={{fontSize: 16, color: '#5e5d5d'}}>
-        산책 구역: {me.walkInfo.walkArea} / 시간: {me.walkInfo.walkTime}
-      </Text>
-    </View>
+        decelerationRate="fast"
+        horizontal
+        onScroll={onScroll}
+        pagingEnabled
+        snapToInterval={windowWidth + gap}
+        snapToAlignment="start"
+        showsHorizontalScrollIndicator={false}>
+        {me.petsInfo.map((item: IPetInfo, index) => (
+          <View
+            key={`page__${item.petName}`}
+            style={{marginLeft: 10, marginRight: 10}}>
+            <FlipCard
+              style={{borderWidth: 0}}
+              friction={6}
+              perspective={1000}
+              flipHorizontal={false}
+              flipVertical={true}
+              // ref={ref => (flipRefs.current[index] = ref)}
+              // onClick={() => {
+              //   setFlipped(!flipped);
+              // }}
+            >
+              <View>
+                <Image
+                  source={{uri: item.petImageUrl}}
+                  style={{
+                    width: flipCardWidth,
+                    height: flipCardHeight,
+                    borderRadius: 300,
+                  }}
+                />
+                <View
+                  style={{
+                    position: 'absolute',
+                    top: 22,
+                    right: 22,
+                    backgroundColor: '#d00000',
+                    borderRadius: 50,
+                    width: 40,
+                    height: 40,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text style={{color: 'white', fontSize: 25}}>1</Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: flipCardWidth,
+                  height: flipCardHeight,
+                  borderRadius: 300,
+                  backgroundColor: '#f3f3f3',
+                  padding: 10,
+                }}>
+                <Text style={{fontSize: 40, color: '#000000'}}>
+                  {item.petName}
+                </Text>
+                <Text style={{fontSize: 18, color: '#000000'}}>
+                  {item.petAge}살{' '}
+                  {item.petGender === GENDER.boy ? 'Boy' : 'Girl'}
+                </Text>
+                <Text style={{fontSize: 16, color: '#000000', marginTop: 15}}>
+                  {me.walkInfo.walkArea} / {me.walkInfo.walkTime}
+                </Text>
+              </View>
+            </FlipCard>
+          </View>
+        ))}
+      </ScrollView>
+    </GestureHandlerRootView>
   ) : (
     <LoadingComponent />
   );

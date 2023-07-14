@@ -6,8 +6,9 @@ import {ICommentInfo, IPostInfo} from '../types/infoTypes';
 import Config from 'react-native-config';
 import LoadingComponent from '../components/common/LoadingComponent';
 import PostComponent from '../components/post/PostComponent';
-import {Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {TextInput, TouchableOpacity, View} from 'react-native';
 import CommentsComponent from '../components/comment/CommentsComponent';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Post = (props: PostProps) => {
   const {postId} = props.route.params;
@@ -73,39 +74,45 @@ const Post = (props: PostProps) => {
   }, []);
 
   return post ? (
-    <View style={{padding: 30}}>
-      <PostComponent post={post} />
-      <TextInput
-        placeholder="댓글을 입력해주세요."
-        value={commentContent}
-        multiline={true}
-        onChangeText={text => onChangeCommentContent(text)}
+    <View style={{flex: 1, padding: 30, backgroundColor: '#ffffff'}}>
+      <View>
+        <PostComponent post={post} />
+      </View>
+      <View
         style={{
-          padding: 10,
-          fontSize: 16,
-          borderStyle: 'solid',
-          borderWidth: 0.5,
-          borderColor: '#b9b9b9',
-          borderRadius: 6,
-          color: '#6e6e6e',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
           marginTop: 30,
-        }}
-      />
-      <TouchableOpacity onPress={submitComment}>
-        <View
+        }}>
+        <TextInput
+          placeholder=" 함께 산책 하시려면 댓글을 등록해주세요"
+          value={commentContent}
+          multiline={true}
+          onChangeText={text => onChangeCommentContent(text)}
           style={{
-            backgroundColor: '#a4a4a4',
-            height: 30,
-            marginTop: 10,
+            flex: 1,
+            padding: 0,
+            fontSize: 15,
+            borderStyle: 'dashed',
+            borderBottomWidth: 0.7,
+            borderColor: '#8c8c8c',
+            color: '#000000',
+            marginRight: 10,
             marginBottom: 30,
-            borderRadius: 10,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text style={{fontSize: 16, color: '#ffffff'}}>댓글 등록</Text>
-        </View>
-      </TouchableOpacity>
-      <CommentsComponent comments={comments} />
+          }}
+        />
+        <TouchableOpacity>
+          <MaterialCommunityIcons
+            onPress={submitComment}
+            name={'chat-plus-outline'}
+            size={32}
+            color={'#a9a9a9'}
+          />
+        </TouchableOpacity>
+      </View>
+      <View>
+        <CommentsComponent comments={comments} />
+      </View>
     </View>
   ) : (
     <LoadingComponent />

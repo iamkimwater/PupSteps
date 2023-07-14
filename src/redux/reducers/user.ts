@@ -31,7 +31,7 @@ const userSlice = createSlice({
     addPetInfoSuccess(state, action) {
       const {petInfo} = action.payload;
       if (state.me) {
-        state.me.petInfo = petInfo;
+        state.me.petsInfo = petInfo;
       }
     },
   },

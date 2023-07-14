@@ -19,7 +19,7 @@ export interface IUserInfo {
   id: number;
   userName: string;
   email: string;
-  petInfo: IPetInfo;
+  petsInfo: IPetInfo[];
 }
 
 export interface IMeInfo extends IUserInfo {

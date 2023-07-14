@@ -1,5 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {
+  Animated,
+  PanResponder,
   Button,
   RefreshControl,
   ScrollView,
@@ -16,10 +18,12 @@ import auth from '@react-native-firebase/auth';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import PetInfoComponent from '../components/PetInfoComponent';
 import {set} from 'zod';
+import {SafeAreaView} from 'react-native';
 
 const Home = (props: HomeProps) => {
   // 로컬 데이터
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   // 글로벌 데이터
   const {me} = useSelector((state: RootState) => state.user);
@@ -28,6 +32,8 @@ const Home = (props: HomeProps) => {
   const navigation = useNavigation<NavigationProps>();
 
   const dispatch = useDispatch();
+
+  const pan = useRef(new Animated.ValueXY()).current;
 
   const gotoLogin = () => {
     navigation.navigate('Login');
@@ -50,12 +56,32 @@ const Home = (props: HomeProps) => {
     dispatch(userSlice.actions.loginByCookie({}));
   };
 
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: Animated.event([null, {dy: pan.y}], {
+        useNativeDriver: false,
+      }),
+      onPanResponderRelease: (_, gestureState) => {
+        if (gestureState.dy < 0) {
+          gotoBoard();
+        }
+        Animated.spring(pan, {
+          toValue: {x: 0, y: 0},
+          friction: 5,
+          useNativeDriver: false,
+        }).start();
+      },
+    }),
+  ).current;
+
   useEffect(() => {
     navigation.setOptions({
-      title: '홈화면',
+      title: '',
+      navigationBarColor: '#000000',
       headerRight: () => (
         <MaterialCommunityIcons
-          name={'account-settings'}
+          name={'account-details'}
           color={'#000000'}
           size={30}
           onPress={gotoSetting}
@@ -70,6 +96,23 @@ const Home = (props: HomeProps) => {
     }
   }, [me]);
 
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: false,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: false,
+        }),
+      ]),
+    ).start();
+  }, [fadeAnim]);
+
   // 리턴
   return !me ? (
     <Button title={'Login'} onPress={gotoLogin} />
@@ -78,36 +121,113 @@ const Home = (props: HomeProps) => {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
-      style={{flex: 1}}>
-      <View style={{flex: 6, alignItems: 'center', margin: 20}}>
-        <PetInfoComponent />
+      style={{flex: 1, backgroundColor: '#ffffff'}}>
+      <View>
+        <View style={{marginTop: 30}}>
+          <Text
+            style={{
+              color: '#4d4d4d',
+              fontSize: 20,
+              textAlign: 'center',
+            }}>
+            Welcome to
+          </Text>
+          <Text
+            style={{
+              color: '#000000',
+              fontSize: 50,
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}>
+            PupSteps :)
+          </Text>
+        </View>
+        <View style={{flex: 1}}>
+          <TouchableOpacity onPress={gotoAddPet1}>
+            <View
+              style={{
+                backgroundColor: '#000000',
+                height: 70,
+                width: 70,
+                borderTopLeftRadius: 40,
+                borderTopRightRadius: 40,
+                borderBottomLeftRadius: 40,
+                borderBottomRightRadius: 5,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 50,
+                marginLeft: 50,
+                marginRight: 285,
+              }}>
+              <Text
+                style={{
+                  fontSize: 40,
+                  color: '#ffffff',
+                  textAlign: 'left',
+                }}>
+                +
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
       <View>
-        <MaterialCommunityIcons
-          onPress={gotoAddPet1}
-          name={'plus-box-outline'}
-          size={40}
-          color={'#c2c2c2'}
-        />
+        <View style={{flex: 6, alignItems: 'center'}}>
+          <PetInfoComponent />
+        </View>
       </View>
       <View style={{flex: 1}}>
-        <TouchableOpacity onPress={gotoBoard}>
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <Animated.View style={{opacity: fadeAnim, marginTop: 80}}>
+            <MaterialCommunityIcons
+              name="chevron-up"
+              color="#000000"
+              size={50}
+            />
+          </Animated.View>
+        </View>
+        <Animated.View
+          {...panResponder.panHandlers}
+          style={{
+            transform: [
+              {
+                translateY: pan.y.interpolate({
+                  inputRange: [-15, 0],
+                  outputRange: [-15, 0],
+                  extrapolate: 'clamp',
+                }),
+              },
+            ],
+          }}
+          onAccessibilityAction={gotoBoard}>
           <View
             style={{
               backgroundColor: '#000000',
-              height: 50,
-              marginLeft: 20,
-              marginRight: 20,
-              marginTop: 0,
-              marginBottom: 50,
-              borderRadius: 10,
+              height: 40,
+              marginLeft: 70,
+              marginRight: 70,
+              borderTopLeftRadius: 40,
+              borderTopRightRadius: 40,
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Text style={{fontSize: 16, color: '#ffffff'}}>나랑산책갈래</Text>
+            <Text style={{fontSize: 17, color: '#ffffff'}}>
+              산책메이트 찾으러 가볼까?
+            </Text>
           </View>
-        </TouchableOpacity>
+          <View
+            style={{
+              backgroundColor: '#000000',
+              height: 30,
+              marginLeft: 70,
+              marginRight: 70,
+            }}
+          />
+        </Animated.View>
       </View>
+      <View style={{flex: 1, backgroundColor: '#000000'}} />
     </ScrollView>
   );
 };

@@ -7,8 +7,7 @@ const CommentComponent = (props: {comment: ICommentInfo}) => {
   return (
     <View>
       <Text>
-        {comment.commentWriter.userName}
-        {comment.commentContent}
+        [{comment.commentWriter.userName}] {comment.commentContent}
       </Text>
     </View>
   );

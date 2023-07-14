@@ -9,6 +9,8 @@ export const ZPetInfo = z.object({
   petImageUrl: z.string(),
 });
 
+export const ZPetsInfo = z.array(ZPetInfo);
+
 export const ZWalkInfo = z.object({
   id: z.number(),
   walkArea: z.string(),
@@ -19,7 +21,7 @@ export const ZOtherInfo = z.object({
   id: z.number(),
   userName: z.string(),
   email: z.string(),
-  petInfo: ZPetInfo,
+  petsInfo: ZPetsInfo,
   userType: z.number(),
 });
 
@@ -46,7 +48,7 @@ export const ZMeInfo = z.object({
   id: z.number(),
   userName: z.string(),
   email: z.string(),
-  petInfo: ZPetInfo,
+  petsInfo: ZPetsInfo,
   userType: z.number(),
   walkInfo: ZWalkInfo,
 });
