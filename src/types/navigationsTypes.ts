@@ -25,19 +25,22 @@ export type RootStackParamList = {
   AddPost: undefined;
   Post: {postId: number};
   Settings: undefined;
+  Chatting: {otherId: number; otherName: string};
+  Chattings: undefined;
 };
 
-export type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
-export type SignupProps = NativeStackScreenProps<RootStackParamList, 'Signup'>;
-export type LoginProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
-export type PostProps = NativeStackScreenProps<RootStackParamList, 'Post'>;
-export type SettingsProps = NativeStackScreenProps<
+export type PetInfoComponentProps = NativeStackScreenProps<
   RootStackParamList,
-  'Settings'
+  'PetInfoComponent'
 >;
 export type AddPet2Props = NativeStackScreenProps<
   RootStackParamList,
   'AddPet2'
+>;
+export type PostProps = NativeStackScreenProps<RootStackParamList, 'Post'>;
+export type ChattingProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Chatting'
 >;
 export type NavigationProps = NativeStackNavigationProp<
   RootStackParamList,

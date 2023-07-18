@@ -1,8 +1,11 @@
 import {useColorScheme} from 'react-native';
 import {IPalette} from '../types/hooksTypes';
 
-function usePalette(): IPalette {
-  if (useColorScheme() === 'light') {
+const usePalette = (): IPalette => {
+  // 데이터
+  const colorMode = useColorScheme();
+  // 리턴
+  if (colorMode === 'light') {
     return {
       THEME: 'LIGHT',
       THEME_COLOR: '#ffffff',
@@ -33,6 +36,6 @@ function usePalette(): IPalette {
       INFO_COLOR_2: '#3463ff',
     };
   }
-}
+};
 
 export default usePalette;

@@ -55,3 +55,27 @@ export interface IFeedback {
   result: boolean;
   message: string;
 }
+
+export interface IChat {
+  sender: {
+    id: number;
+    userName: string;
+  };
+  receiver: {
+    id: number;
+    userName: string;
+  };
+  message: string;
+}
+
+export interface IRoom {
+  sender: {
+    id: number;
+    userName: string;
+  };
+  receiver: {
+    id: number;
+    userName: string;
+  };
+  lastMessage: string;
+}

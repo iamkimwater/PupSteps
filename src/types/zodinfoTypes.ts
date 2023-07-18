@@ -67,3 +67,15 @@ export const ZFeedback = z.object({
   result: z.boolean(),
   message: z.string(),
 });
+
+export const ZChat = z.object({
+  sender: z.object({
+    id: z.number(),
+    userName: z.string(),
+  }),
+  receiver: z.object({
+    id: z.number(),
+    userName: z.string(),
+  }),
+  message: z.string(),
+});

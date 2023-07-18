@@ -8,21 +8,25 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import userSlice from '../redux/reducers/user';
-import {HomeProps, NavigationProps, RootState} from '../types/navigationsTypes';
+import {NavigationProps, RootState} from '../types/navigationsTypes';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import PetInfoComponent from '../components/PetInfoComponent';
 import {set} from 'zod';
 import {SafeAreaView} from 'react-native';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import useSocket from '../hooks/useSocket';
 
-const Home = (props: HomeProps) => {
+const Home = () => {
   // 로컬 데이터
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [count, setCount] = useState(3);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   // 글로벌 데이터
@@ -34,6 +38,8 @@ const Home = (props: HomeProps) => {
   const dispatch = useDispatch();
 
   const pan = useRef(new Animated.ValueXY()).current;
+
+  const [socket] = useSocket();
 
   const gotoLogin = () => {
     navigation.navigate('Login');
@@ -56,6 +62,12 @@ const Home = (props: HomeProps) => {
     dispatch(userSlice.actions.loginByCookie({}));
   };
 
+  const loginUser2 = () => {
+    const cookie = '2';
+    dispatch(userSlice.actions.loginByCookie({cookie}));
+    Alert.alert('유저2로 로그인되었습니다');
+  };
+
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -75,17 +87,48 @@ const Home = (props: HomeProps) => {
     }),
   ).current;
 
+  const gotoChattings = () => {
+    navigation.navigate('Chattings');
+  };
+
+  useEffect(() => {
+    // 2. 이벤트를 받는다
+    if (socket) {
+      socket.on('new-chat-created', () => {
+        console.log('이벤트받았음');
+        setCount(count + 1);
+      });
+    }
+  }, [count, socket]);
+
   useEffect(() => {
     navigation.setOptions({
       title: '',
       navigationBarColor: '#000000',
       headerRight: () => (
-        <MaterialCommunityIcons
-          name={'account-details'}
-          color={'#000000'}
-          size={30}
-          onPress={gotoSetting}
-        />
+        <View style={{flexDirection: 'row'}}>
+          <MaterialCommunityIcons
+            name={'login'}
+            color={'#000000'}
+            size={30}
+            onPress={loginUser2}
+            style={{marginRight: 10}}
+          />
+          <MaterialCommunityIcons
+            name={'send'}
+            color={'#000000'}
+            size={30}
+            onPress={gotoChattings}
+            style={{marginRight: 10}}
+          />
+          <Text>{count}</Text>
+          <MaterialCommunityIcons
+            name={'account-details'}
+            color={'#000000'}
+            size={30}
+            onPress={gotoSetting}
+          />
+        </View>
       ),
     });
   });

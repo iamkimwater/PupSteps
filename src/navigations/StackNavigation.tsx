@@ -1,13 +1,11 @@
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {useDispatch, useSelector} from 'react-redux';
-
+import {useSelector} from 'react-redux';
 import {RootStackParamList, RootState} from '../types/navigationsTypes';
 import {useEffect} from 'react';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import userSlice from '../redux/reducers/user';
-import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import auth from '@react-native-firebase/auth';
 import Config from 'react-native-config';
 import Home from '../screens/Home';
 import Signup from '../screens/Signup';
@@ -15,58 +13,24 @@ import Login from '../screens/Login';
 import AddPost from '../screens/AddPost';
 import Setting from '../screens/Setting';
 import SplashScreen from 'react-native-splash-screen';
-import errorSlice from '../redux/reducers/error';
 import Board from '../screens/Board';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import Post from '../screens/Post';
 import AddPet1 from '../screens/AddPet1';
 import AddPet2 from '../screens/AddPet2';
+import useSocket from '../hooks/useSocket';
+import Chatting from '../screens/Chatting';
+import Chattings from '../screens/Chattings';
+import useAuth from '../hooks/useAuth';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const StackNavigation = () => {
   // 글로벌 데이터
   const {me} = useSelector((state: RootState) => state.user);
-  const {error} = useSelector((state: RootState) => state.error);
 
   // 함수
-  const dispatch = useDispatch();
-
-  const authCheck = async () => {
-    try {
-      const cookie = await EncryptedStorage.getItem('cookie');
-      dispatch(userSlice.actions.loginByCookie({cookie}));
-      // const cookie = await EncryptedStorage.getItem('cookie');
-      // if (cookie) {
-      //   dispatch(userSlice.actions.loginByCookie({}));
-      //   return;
-      // }
-      //
-      // const isSignedIn = await GoogleSignin.isSignedIn();
-      // if (!isSignedIn) {
-      //   SplashScreen.hide();
-      //   return;
-      // }
-      //
-      // const {idToken} = await GoogleSignin.signInSilently();
-      // const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-      // return auth().signInWithCredential(googleCredential);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const onAuthStateChanged = async (user: FirebaseAuthTypes.User | null) => {
-    try {
-      if (user) {
-        const idToken = await user.getIdToken();
-        console.log('get idToken success');
-        dispatch(userSlice.actions.loginByFirebase({idToken}));
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const [socket, connect] = useSocket();
+  const [authCheck, onAuthStateChanged] = useAuth();
 
   // 컴포넌트가 렌더링될 때 자동으로 실행될 함수들의 모음
   useEffect(() => {
@@ -75,24 +39,17 @@ const StackNavigation = () => {
       webClientId: Config.WEB_CLIENT_ID,
     });
     authCheck();
-  }, []);
+  }, [authCheck, onAuthStateChanged]);
   useEffect(() => {
     if (me) {
+      // 채팅 통신을 위해서 통로를 개설
+      if (!socket) {
+        const connectedSocket = connect();
+        connectedSocket.emit('join-room', {userId: me.id});
+      }
       SplashScreen.hide();
     }
-  }, [me]);
-  useEffect(() => {
-    if (error) {
-      if (error.type === 'cookie-expired') {
-        SplashScreen.hide();
-      } else if (error.type === 'firebase-token-error') {
-        SplashScreen.hide();
-      } else if (error.type === 'user-type-error') {
-        SplashScreen.hide();
-      }
-      dispatch(errorSlice.actions.setError({}));
-    }
-  }, [dispatch, error]);
+  }, [connect, me, socket]);
 
   // 리턴
   return (
@@ -112,6 +69,12 @@ const StackNavigation = () => {
           <Stack.Screen name="AddPost" component={AddPost} />
           <Stack.Screen name="Post" component={Post} options={{title: ''}} />
           <Stack.Screen name="Settings" component={Setting} />
+          <Stack.Screen
+            name="Chatting"
+            component={Chatting}
+            options={{title: '루비엄마 김유아와 대화중..'}}
+          />
+          <Stack.Screen name="Chattings" component={Chattings} options={{}} />
         </Stack.Navigator>
       )}
     </NavigationContainer>

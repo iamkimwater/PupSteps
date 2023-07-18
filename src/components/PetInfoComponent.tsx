@@ -4,19 +4,24 @@ import {useSelector} from 'react-redux';
 import FlipCard from 'react-native-flip-card';
 import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler';
 import {GENDER} from '../types/enums';
-import {RootState} from '../types/navigationsTypes';
+import {PetInfoComponentProps, RootState} from '../types/navigationsTypes';
 import {IPetInfo} from '../types/infoTypes';
 import LoadingComponent from './common/LoadingComponent';
+import usePalette from '../hooks/usePalette';
 
-const windowWidth = Dimensions.get('window').width;
-const flipCardWidth = windowWidth - 100;
-const flipCardHeight = flipCardWidth;
-const gap = 30;
-const offset = 30;
+const PetInfoComponent = (props: PetInfoComponentProps) => {
+  // 변하지 않는 데이터
+  const windowWidth = Dimensions.get('window').width;
+  const flipCardWidth = windowWidth - 100;
+  const flipCardHeight = flipCardWidth;
+  const gap = 30;
+  const offset = 30;
+  const {THEME_COLOR} = usePalette();
 
-const PetInfoComponent = () => {
+  // 변하는 글로벌 데이터
   const {me} = useSelector((state: RootState) => state.user);
 
+  // 변하는 로컬 데이터
   const [flipped, setFlipped] = useState(false);
 
   const flipRefs = useRef([]);
@@ -26,7 +31,7 @@ const PetInfoComponent = () => {
   };
 
   return me ? (
-    <GestureHandlerRootView style={{flex: 1, backgroundColor: '#ffffff'}}>
+    <GestureHandlerRootView style={{flex: 1, backgroundColor: THEME_COLOR}}>
       <ScrollView
         automaticallyAdjustContentInsets={false}
         contentContainerStyle={{
